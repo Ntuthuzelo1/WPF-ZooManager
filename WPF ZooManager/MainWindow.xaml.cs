@@ -31,6 +31,31 @@ namespace WPF_ZooManager
             string connectionString = ConfigurationManager.ConnectionStrings["WPF_ZooManager.Properties.Settings.PanjutorialsDBConnectionString"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
             ShowZoos();
+            ShowAllAnimals();
+        }
+
+        private void ShowAllAnimals()
+        {
+            try
+            {
+                string query = "select * from Animal";
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+
+                using (sqlDataAdapter)
+                {
+                    DataTable animalTable = new DataTable();
+                    sqlDataAdapter.Fill(animalTable);
+
+                    listAllAnimals.DisplayMemberPath = "Name";
+                    listAllAnimals.SelectedValuePath = "Id";
+                    listAllAnimals.ItemsSource = animalTable.DefaultView;
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            
         }
 
         private void ShowZoos()
